@@ -21,22 +21,21 @@ body {
 
 .full-size>* {
   flex: 1;
-  font-family: 'Unbounded';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 900;
   font-size: 9.2vh;
 }
 
 .shapes-wrapper {
+  overflow: hidden;
   z-index: 3;
   height: 100%;
-  width: 400px;
-  margin-left: 600px;
+  width: 100%;
   position: absolute;
 }
 
 .shape {
-  transform: translate(var(--x), var(--y));
   position: absolute;
   aspect-ratio: 1 / 1;
   width: 300px;

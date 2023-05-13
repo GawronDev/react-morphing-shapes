@@ -13,13 +13,12 @@ var initial_chagne = false;
 
 export default function Shape(props) {
     useEffect(() => {
-        var s = Snap("#shape");
+        var s = Snap('#shape');
         // Avoid overwrite by rerendering
         if(shape == ""){
-            console.log("Shape");
             shape = s.path({
-                fill: 'white',
-                d: "M100"
+                fill: '#A771FE',
+                d: "M100 300",
             });
         }
     }, [])
