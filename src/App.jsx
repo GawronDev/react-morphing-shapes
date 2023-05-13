@@ -6,40 +6,29 @@ function App() {
 
   let tl = gsap.timeline({ delay: 0.5 });
 
-  const [currentShape, setcurrentShape]  = useState("CIRCLE");
-
-  function changeShape(){
-    switch(currentShape){
-      case "CIRCLE":
-        setcurrentShape("RECTANGLE");
-        break;
-      case "RECTANGLE":
-        setcurrentShape("CIRCLE");
-        break;
-    }
-  }
+  const [currentShape, setcurrentShape] = useState("CIRCLE");
 
   return (
-    <div className='main-wrapper'  onClick={changeShape}>
-      {/* <div className='full-size text'>
+    <div className='main-wrapper'>
+      <div className='full-size text'>
         <h1>WOW</h1>
         <h1>HOW</h1>
         <h1>DO</h1>
         <h1>THESE</h1>
         <h1>SHAPES</h1>
         <h1>MORPH?</h1>
-      </div> */}
+      </div>
       <div className="shapes-wrapper">
         <Shape key="1" shape={currentShape} />
       </div>
-      {/* <div className="full-size outline" >
-        <h1>WOW</h1>
-        <h1>HOW</h1>
-        <h1>DO</h1>
-        <h1>THESE</h1>
-        <h1>SHAPES</h1>
-        <h1>MORPH?</h1>
-    </div> */}
+      <div className="full-size outline" >
+        <h1 onMouseOver={()=> setcurrentShape("CIRCLE")}>WOW</h1>
+        <h1 onMouseOver={()=> setcurrentShape("RECTANGLE")}>HOW</h1>
+        <h1 onMouseOver={()=> setcurrentShape("POLYGON")}>DO</h1>
+        <h1 onMouseOver={()=> setcurrentShape("OCTAGON")}>THESE</h1>
+        <h1 onMouseOver={()=> setcurrentShape("DOUBLETRIANGLE")}>SHAPES</h1>
+        <h1 onMouseOver={()=> setcurrentShape("OCTAGON")}>MORPH?</h1>
+      </div>
     </div>
   )
 }
