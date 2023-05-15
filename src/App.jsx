@@ -1,10 +1,24 @@
 import { useEffect, useState, useRef } from 'react';
 import { ReactDOM } from 'react-dom';
-import Shape from './components/Shape';
+import Snap from 'snapsvg-cjs';
+
+
+
+// Neccessary variables
+let animation_time = 500;
+let animation_type = mina.backin;
+let s = null;
+let g = null;
+var circle = { d: "M150,150m-150,0a150,150 0 1,0 300,0a150,150 0 1,0 -300,0" };
+var square = { d: "M300,300H0V0H300V300Z" };
+var polygon = { d: "M300,150l-75,150H75L0,150,75,0H225l75,150Z" };
+var octagon = { d: "M300,87.87v124.26l-87.87,87.87H87.87L0,212.13V87.87L87.87,0h124.26l87.87,87.87Z" };
+var double_triangle = { d: "M225,150l75,150H0L75,150,0,0H300l-75,150Z" };
+var triangle = { d: "M300,300H0L150,0l150,300Z" };
 
 function App() {
-
-  const [currentShape, setcurrentShape] = useState("CIRCLE");
+  console.log("App refreshed");
+  var shapes = [];
 
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -24,18 +38,91 @@ function App() {
     return clamp(Math.floor(Math.random() * factor));
   }
 
-  useEffect(()=>{
-    let shapes = document.getElementById("shapes_wrapper").children;
-    for(let i = 0; i < document.getElementById("shapes_wrapper").children.length; i++){
-      movementAnimation(shapes[i]);
-    }
-  },[])
+  function random_coordinate(border) {
+    return Math.floor(Math.random() * border);
+  }
 
-  function movementAnimation(shape){
-    // Create a random movement animation
-    var x = random(width);
-    var y = random(height);
-    shape.style.transform = "translate(" + x + "px, " + y + "px)";
+  useEffect(() => {
+    if (s = null) {
+      return;
+    }
+
+    s = Snap("#shapes_wrapper");
+    s.clear();
+
+    for (let i = 0; i < 2; i++) {
+      var new_shape = s.path({ d: "M150,150m-150,0a150,150 0 1,0 300,0a150,150 0 1,0 -300,0", fill: '#A771FE' });
+      new_shape.transform(`translate(t${random_coordinate(width - 100)}, ${random_coordinate(height - 100)})`);
+      shapes.push(new_shape);
+    };
+  }, []);
+
+  function currentShape(currentShape){
+    console.log("Current shape ", currentShape)
+      for(let i = 0; i <  shapes.length; i++){
+        if (currentShape == "CIRCLE") {
+          animateToCircle(shapes[i]);
+        }
+        if (currentShape == "RECTANGLE") {
+          animateToSquare(shapes[i]);
+        }
+        if (currentShape == "TRIANGLE") {
+          animateToTriangle(shapes[i]);
+        }
+        if (currentShape == "DOUBLETRIANGLE") {
+          animateToDoubleTriangle(shapes[i]);
+    
+        }
+        if (currentShape == "POLYGON") {
+          animateToPolygon(shapes[i]);
+    
+        }
+        if (currentShape == "OCTAGON") {
+          animateToOctagon(shapes[i]);
+        }
+      }
+  }
+
+  function animateToSquare(shape) {
+    shape.animate(square, animation_time, animation_type);
+  }
+
+  function animateToCircle(shape) {
+    shape.animate(circle, animation_time, animation_type);
+  }
+
+  function animateToPolygon(shape) {
+    shape.animate(polygon, animation_time, animation_type);
+  }
+
+  function animateToTriangle(shape) {
+    shape.animate(triangle, animation_time, animation_type);
+  }
+
+  function animateToDoubleTriangle(shape) {
+    shape.animate(double_triangle, animation_time, animation_type);
+  }
+
+  function animateToOctagon(shape) {
+    shape.animate(octagon, animation_time, animation_type);
+  }
+
+  function animateShapeMovement() {
+    if (x <= 0 || x >= width || y <= 0 || y >= height) {
+      xi = x > width / 2 ? x - 1 : x + 1;
+      yi = y > height / 2 ? y - 1 : y + 1;
+
+      x = 0;
+      y = 0;
+      deg = (deg + 90) % 360;
+      console.log(deg);
+      r = 0;
+    }
+    x = xi + r * Math.cos(degreeToRadian(deg));
+    y = yi + r * Math.cos(degreeToRadian(deg));
+    r = r + 1;
+
+    requestAnimationFrame(animateShapeMovement);
   }
 
   return (
@@ -48,19 +135,15 @@ function App() {
         <h1>DOUBLE TRIANGLE</h1>
         <h1>OCTAGON</h1>
       </div>
-      <div className="shapes-wrapper" id="shapes_wrapper">
-        <Shape key="1" shape={currentShape} />
-        <Shape key="2" shape={currentShape} />
-        <Shape key="3" shape={currentShape} />
-        <Shape key="4" shape={currentShape} />
-      </div>
+      <svg className="shapes-wrapper" id="shapes_wrapper">
+      </svg >
       <div className="full-size outline" >
-        <h1 onMouseOver={() => setcurrentShape("CIRCLE")}>CIRCLE</h1>
-        <h1 onMouseOver={() => setcurrentShape("RECTANGLE")}>SQUARE</h1>
-        <h1 onMouseOver={() => setcurrentShape("POLYGON")}>POLYGON</h1>
-        <h1 onMouseOver={() => setcurrentShape("TRIANGLE")}>TRIANGLE</h1>
-        <h1 onMouseOver={() => setcurrentShape("DOUBLETRIANGLE")}>DOUBLE TRIANGLE</h1>
-        <h1 onMouseOver={() => setcurrentShape("OCTAGON")}>OCTAGON</h1>
+        <h1 onMouseOver={() => currentShape("CIRCLE")}>CIRCLE</h1>
+        <h1 onMouseOver={() => currentShape("RECTANGLE")}>SQUARE</h1>
+        <h1 onMouseOver={() => currentShape("POLYGON")}>POLYGON</h1>
+        <h1 onMouseOver={() => currentShape("TRIANGLE")}>TRIANGLE</h1>
+        <h1 onMouseOver={() => currentShape("DOUBLETRIANGLE")}>DOUBLE TRIANGLE</h1>
+        <h1 onMouseOver={() => currentShape("OCTAGON")}>OCTAGON</h1>
       </div>
     </div>
   )
@@ -71,41 +154,4 @@ export default App
 
 
 
-// useEffect(() => {
-//   function animate_cricle() {
-//     if (x1 <= 0 || x1 >= width || y1 <= 0 || y1 >= height) {
-//       xi1 = x1 > width / 2 ? x1 - 1 : x1 + 1;
-//       yi1 = y1 > height / 2 ? y1 - 1 : y1 + 1;
-
-//       x1 = 0;
-//       y1 = 0;
-//       deg1 = (deg1 + 90) % 360;
-//       console.log(deg1);
-//       r1 = 0;
-//     }
-//     if (x2 <= 0 || x2 >= width || y2 <= 0 || y2 >= height) {
-//       xi2 = x2 > width / 2 ? x2 - 1 : x2 + 1;
-//       yi2 = y2 > height / 2 ? y2 - 1 : y2 + 1;
-
-//       x2 = 0;
-//       y2 = 0;
-//       deg2 = (deg2 + 90) % 360;
-//       r2 = 2;
-//     }
-
-//     x1 = xi1 + r1 * Math.cos(degreeToRadian(deg1));
-//     y1 = yi1 + r1 * Math.cos(degreeToRadian(deg1));
-//     r1 = r1 + 1;
-//     circle1.attr({ cx: x1, cy: y1 });
-
-//     x2 = xi2 + r2 * Math.cos(degreeToRadian(deg2));
-//     x1 = x1;
-//     y2 = yi2 + r2 * Math.cos(degreeToRadian(deg2));
-//     y2 = y2;
-//     r2 = r2 + 2;
-//     circle2.attr({ cx: x2, cy: y2 });
-
-//     requestAnimationFrame(animate_cricle);
-//   }
-//   animate_cricle();
-// }, [])
+  

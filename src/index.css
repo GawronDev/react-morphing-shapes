@@ -28,6 +28,7 @@ body {
 }
 
 .shapes-wrapper {
+  filter: blur(2px);
   overflow: hidden;
   z-index: 3;
   height: 100%;
