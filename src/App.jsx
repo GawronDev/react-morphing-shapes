@@ -50,11 +50,25 @@ function App() {
     s = Snap("#shapes_wrapper");
     s.clear();
 
-    for (let i = 0; i < 2; i++) {
-      var new_shape = s.path({ d: "M150,150m-150,0a150,150 0 1,0 300,0a150,150 0 1,0 -300,0", fill: '#A771FE' });
-      new_shape.transform(`translate(t${random_coordinate(width - 100)}, ${random_coordinate(height - 100)})`);
-      shapes.push(new_shape);
-    };
+    var s1 = s.path({ d: "M150,150m-150,0a150,150 0 1,0 300,0a150,150 0 1,0 -300,0", fill: '#A771FE' });
+    s1.transform(`translate(t${random_coordinate(width - 100)}, ${random_coordinate(height - 100)})`);
+    shapes.push(s1);
+
+    var s2 = s.path({ d: "M150,150m-150,0a150,150 0 1,0 300,0a150,150 0 1,0 -300,0", fill: '#782FEF' });
+    s2.transform(`translate(t${random_coordinate(width - 100)}, ${random_coordinate(height - 100)})`);
+    shapes.push(s2);
+
+
+  function animateShapeMovement(shape, x, y, speed, deg) {
+    
+    
+    shape.transform(`translate(t${x} ${y})`);
+
+    requestAnimationFrame(animateShapeMovement.bind(null, shape, x, y, speed, deg));
+  }
+
+  animateShapeMovement(s1, s1.getBBox().cx, s1.getBBox().cy, 0.01, 0);
+
   }, []);
 
   function currentShape(currentShape){
@@ -107,23 +121,6 @@ function App() {
     shape.animate(octagon, animation_time, animation_type);
   }
 
-  function animateShapeMovement() {
-    if (x <= 0 || x >= width || y <= 0 || y >= height) {
-      xi = x > width / 2 ? x - 1 : x + 1;
-      yi = y > height / 2 ? y - 1 : y + 1;
-
-      x = 0;
-      y = 0;
-      deg = (deg + 90) % 360;
-      console.log(deg);
-      r = 0;
-    }
-    x = xi + r * Math.cos(degreeToRadian(deg));
-    y = yi + r * Math.cos(degreeToRadian(deg));
-    r = r + 1;
-
-    requestAnimationFrame(animateShapeMovement);
-  }
 
   return (
     <div className='main-wrapper'>
